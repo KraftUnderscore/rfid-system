@@ -50,16 +50,20 @@ class Database():
             print(f"Removed worker {worker.name} with id {workerId}.")
         else:
             print(f"Worker with id {workerId} doesn't exist!")
-    #lacks feedback when worker not found
+
     def addRFID(self, workerId, RFID):
         worker = self.findWorker(workerId)
         if worker != None:
             worker.addCard(RFID)
-    #same here
+        else:
+            print(f"Worker with id {workerId} not found.")
+
     def rmRFID(self, workerId, RFID):
         worker = self.findWorker(workerId)
         if worker != None:
             worker.rmCard(RFID)
+        else:
+            print(f"Worker with id {workerId} not found.")
 
     def printWorkers(self):
         print("List of workers:")
@@ -81,20 +85,26 @@ class Database():
         self.logs.append(self.Log(clientId, -1, RFID))
 
     def getWorkerLogs(self, workerId):
-        pass
-
-    def getAllWorkerLogs(self):
-        pass
-
-    def getWorkerCSV(self, workerId):
-        pass
-    
-    def getAllWorkerCSV(self):
-        pass
-
-    def generateReport(self, workerId):
         output = []
         for log in self.logs:
             if log.workerId == workerId:
                 output.append((log.clientId, workerId, log.RFID, log.timestamp))
         return output
+
+    def getAllWorkerLogs(self):
+        output = []
+        for worker in self.workers:
+            output.append(self.getWorkerLogs(worker.id))
+        return output
+
+    def getWorkerCSV(self, workerId):
+        log = self.getWorkerLogs(workerId)
+        return f"{log[0]},{log[1]},{log[2]},{log[3]}"
+    
+    def getAllWorkerCSV(self):
+        output = "clientId,workerId,RFID,timestamp"
+        for worker in self.workers:
+            output+=self.getWorkerCSV(worker.id)+"\n"
+        return output
+
+#last 4 functions need redoing

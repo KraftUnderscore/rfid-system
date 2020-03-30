@@ -99,10 +99,18 @@ def main():
             db.printWorkers()
         elif token == "lsClients":
             db.printClients()
-        elif token == "reports":
-            print(db.generateReport(int(input("Input worker's id (integer): "))))
+        elif token == "workerLogs":
+            print(db.getWorkerLogs(int(input("Input worker's id (integer): "))))
+        elif token == "allWorkersLogs":
+            print(db.getAllWorkerLogs())
+        elif token == "workerLogsCSV":
+            print(db.getWorkerCSV(int(input("Input worker's id (integer): "))))
+        elif token == "allWorkerLogsCSV":
+            print(db.getAllWorkerCSV())
         else:
             print(f"Unrecognised command '{token}'.")
             
+        #do i need those non csv outputs? probably not
+        #Update help command!
 if __name__ == "__main__":
     main()
