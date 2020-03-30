@@ -88,23 +88,18 @@ class Database():
         output = []
         for log in self.logs:
             if log.workerId == workerId:
-                output.append((log.clientId, workerId, log.RFID, log.timestamp))
-        return output
-
-    def getAllWorkerLogs(self):
-        output = []
-        for worker in self.workers:
-            output.append(self.getWorkerLogs(worker.id))
+                output.append(log)
         return output
 
     def getWorkerCSV(self, workerId):
-        log = self.getWorkerLogs(workerId)
-        return f"{log[0]},{log[1]},{log[2]},{log[3]}"
+        logs = self.getWorkerLogs(workerId)
+        output = "clientId,workerId,RFID,timestamp\n"
+        for log in logs:
+            output+=f"{log.clientId},{log.workerId},{log.RFID},{log.timestamp}\n"
+        return output
     
     def getAllWorkerCSV(self):
-        output = "clientId,workerId,RFID,timestamp"
-        for worker in self.workers:
-            output+=self.getWorkerCSV(worker.id)+"\n"
+        output = "clientId,workerId,RFID,timestamp\n"
+        for log in self.logs:
+            output+=f"{log.clientId},{log.workerId},{log.RFID},{log.timestamp}\n"
         return output
-
-#last 4 functions need redoing

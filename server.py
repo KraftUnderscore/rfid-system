@@ -73,7 +73,8 @@ def main():
             > lsWorkers - list all workers in the system
             > lsClients - list all terminals in the system
             > read - simulate an RFID card input
-            > reports - print report of a specified worker\n""")
+            > logWorker - print logs of a single worker in CSV format
+            > logAllWorkers - print logs of all workers in CSV format\n""")
         elif token == "addClient":
             db.addClient()
         elif token == "rmClient":
@@ -99,18 +100,14 @@ def main():
             db.printWorkers()
         elif token == "lsClients":
             db.printClients()
-        elif token == "workerLogs":
-            print(db.getWorkerLogs(int(input("Input worker's id (integer): "))))
-        elif token == "allWorkersLogs":
-            print(db.getAllWorkerLogs())
-        elif token == "workerLogsCSV":
+        elif token == "logWorker":
             print(db.getWorkerCSV(int(input("Input worker's id (integer): "))))
-        elif token == "allWorkerLogsCSV":
+        elif token == "logAllWorkers":
             print(db.getAllWorkerCSV())
+        elif token == "test":
+            print(db.getWorkerLogs(int(input("Input worker's id (integer): "))))
         else:
             print(f"Unrecognised command '{token}'.")
             
-        #do i need those non csv outputs? probably not
-        #Update help command!
 if __name__ == "__main__":
     main()
