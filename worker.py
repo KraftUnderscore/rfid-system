@@ -1,23 +1,20 @@
 class Worker:
     def __init__(self, name, id):
         self.name = name
-        self.cards = []
+        self.card = -1
         self.id = id
         self.removed = False
 
-    def addCard(self, id):
-        if self.cards.count(id) >0:
-            print(f"Worker {self.name} with id {self.id} already has RFID {id}.")
-        else:
-            self.cards.append(id)
-            print(f"Added RFID {id} to worker {self.name} with id {self.id}.")
+    def setCard(self, RFID):
+        self.card = RFID
 
-    def rmCard(self, id):
-        if self.cards.count(id) > 0:
-            self.cards.remove(id)
-            print(f"Removed RFID {id} from worker {self.name} with id {self.id}.")
-        else:
-            print(f"Worker {self.name} with id {self.id} doesn't have RFID {id}")
+    def setRemoved(self, removed):
+        self.removed = removed
 
     def __str__(self):
-        return f"Worker {self.name} with id {self.id}. \n > Assigned cards: {self.cards}"
+        tmp = ""
+        if self.card == -1:
+            tmp = "none"
+        else:
+            tmp = str(self.card)
+        return f"Worker {self.name} with id {self.id}. \n > Assigned card: {tmp}"

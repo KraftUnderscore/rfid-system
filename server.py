@@ -22,64 +22,17 @@ def read():
         num += UID[i] << (i*8)
     return num
 
-def populateDatabase(db):
-    db.addClient()
-    db.addClient()
-    db.addClient()
-
-    db.addWorker("Sebastian")
-    db.addWorker("Michal")
-    db.addWorker("Agnieszka")
-
-    db.addRFID(0, 116599648176)
-    time.sleep(0.05)
-    db.addRFID(0, 171048992217)
-    time.sleep(0.05)
-    db.addRFID(1, 81344408412)
-    time.sleep(0.05)
-    db.addRFID(2, 634617584188)
-    time.sleep(0.05)
-    db.addRFID(2, 883748248143)
-    time.sleep(0.05)
-
-    db.addLog(116599648176, 0)
-    time.sleep(0.05)
-    db.addLog(81344408412, 1)
-    time.sleep(0.05)
-    db.addLog(634617584188, 2)
-    time.sleep(0.05)
-    db.addLog(116599648176, 0)
-    time.sleep(0.05)
-    db.addLog(81344408412, 1)
-    time.sleep(0.05)
-    db.addLog(634617584188, 2)
-    time.sleep(0.05)
-    db.addLog(171048992217, 0)
-    time.sleep(0.05)
-    db.addLog(883748248143, 1)
-    time.sleep(0.05)
-    db.addLog(81344408412, 2)
-    time.sleep(0.05)
-    db.addLog(171048992217, 0)
-    time.sleep(0.05)
-    db.addLog(883748248143, 1)
-    time.sleep(0.05)
-    db.addLog(81344408412, 2)   
-
 def main():
     db = Database()
-    if input("Load sample database? (Y/N): ") == "Y":
-        populateDatabase(db)
-
     isRunning = True
     while(isRunning):
         token = input(">")
-        if token == "end":
+        if token == "exit":
             isRunning = False
         elif token == "help":
             print("""Command list:
             > help - list of all commands
-            > end - end server
+            > exit - end server
             > read - simulate an RFID card input
             > addClient - add a new terminal to the system
             > rmClient - remove an existing terminal from the system
@@ -89,8 +42,7 @@ def main():
             > rmRFID - remove an RFID card from an existing worker
             > lsWorkers - list all workers in the system
             > lsClients - list all terminals in the system
-            > logWorker - print logs of a single worker in CSV format
-            > logAllWorkers - print logs of all workers in CSV format\n""")
+            > generateReport - generate a .csv file with worktime of selected worker.""")
         elif token == "addClient":
             db.addClient()
         elif token == "rmClient":
@@ -107,7 +59,7 @@ def main():
         elif token == "rmRFID":
             workerId = int(input("Input worker's id (integer): "))
             RFID = read()
-            db.rmRFID(workerId, RFID)
+            db.rmRFID(workerId)
         elif token == "read":
             clientId = int(input("Input client id (integer): "))
             RFID = read()
@@ -116,12 +68,10 @@ def main():
             db.printWorkers()
         elif token == "lsClients":
             db.printClients()
-        elif token == "logWorker":
-            print(db.getWorkerCSV(int(input("Input worker's id (integer): "))))
-        elif token == "logAllWorkers":
-            print(db.getAllWorkerCSV())
+        elif token == "generateReport":
+            print(db.generateReport(int(input("Input worker's id (integer): "))))
         elif token == "test":
-            print(db.getWorkerLogs(int(input("Input worker's id (integer): "))))
+            print(db.test())
         else:
             print(f"Unrecognised command '{token}'.")
             
