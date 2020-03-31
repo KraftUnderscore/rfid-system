@@ -1,10 +1,26 @@
 from database import Database
 import time
 
+rfids = {
+    "1" : [176, 111, 225, 37, 27], #116599648176
+    "2" : [217, 125, 80, 211, 39], #171048992217
+    "3" : [92, 43, 129, 240, 18], #81344408412
+    "4" : [60, 218, 39, 194, 147], #634617584188
+    "5" : [79, 26, 128, 195, 205], #883748248143
+    "6" : [123, 175, 29, 54, 109], #469059350395
+    "7" : [92, 49, 137, 251, 123], #532501049692
+    "8" : [19, 39, 149, 209, 29], #128070264595
+    "9" : [18, 56, 172, 213, 119] #514685941778
+}
+
 #will be done using client
 def read():
     print("-----READING RFID-----")
-    return int(input("Input RFID number (1-9): ")*5)
+    UID = rfids[input("Input RFID number (1-9): ")]
+    num = 0
+    for i in range(0, len(UID)):
+        num += UID[i] << (i*8)
+    return num
 
 def populateDatabase(db):
     db.addClient()
@@ -15,40 +31,40 @@ def populateDatabase(db):
     db.addWorker("Michal")
     db.addWorker("Agnieszka")
 
-    db.addRFID(0, 33333)
+    db.addRFID(0, 116599648176)
     time.sleep(0.05)
-    db.addRFID(0, 77777)
+    db.addRFID(0, 171048992217)
     time.sleep(0.05)
-    db.addRFID(1, 55555)
+    db.addRFID(1, 81344408412)
     time.sleep(0.05)
-    db.addRFID(2, 99999)
+    db.addRFID(2, 634617584188)
     time.sleep(0.05)
-    db.addRFID(2, 22222)
+    db.addRFID(2, 883748248143)
     time.sleep(0.05)
 
-    db.addLog(33333, 0)
+    db.addLog(116599648176, 0)
     time.sleep(0.05)
-    db.addLog(55555, 1)
+    db.addLog(81344408412, 1)
     time.sleep(0.05)
-    db.addLog(99999, 2)
+    db.addLog(634617584188, 2)
     time.sleep(0.05)
-    db.addLog(33333, 0)
+    db.addLog(116599648176, 0)
     time.sleep(0.05)
-    db.addLog(55555, 1)
+    db.addLog(81344408412, 1)
     time.sleep(0.05)
-    db.addLog(99999, 2)
+    db.addLog(634617584188, 2)
     time.sleep(0.05)
-    db.addLog(77777, 0)
+    db.addLog(171048992217, 0)
     time.sleep(0.05)
-    db.addLog(22222, 1)
+    db.addLog(883748248143, 1)
     time.sleep(0.05)
-    db.addLog(55555, 2)
+    db.addLog(81344408412, 2)
     time.sleep(0.05)
-    db.addLog(77777, 0)
+    db.addLog(171048992217, 0)
     time.sleep(0.05)
-    db.addLog(22222, 1)
+    db.addLog(883748248143, 1)
     time.sleep(0.05)
-    db.addLog(55555, 2)   
+    db.addLog(81344408412, 2)   
 
 def main():
     db = Database()
@@ -64,6 +80,7 @@ def main():
             print("""Command list:
             > help - list of all commands
             > end - end server
+            > read - simulate an RFID card input
             > addClient - add a new terminal to the system
             > rmClient - remove an existing terminal from the system
             > addWorker - add a new worker to the system
@@ -72,7 +89,6 @@ def main():
             > rmRFID - remove an RFID card from an existing worker
             > lsWorkers - list all workers in the system
             > lsClients - list all terminals in the system
-            > read - simulate an RFID card input
             > logWorker - print logs of a single worker in CSV format
             > logAllWorkers - print logs of all workers in CSV format\n""")
         elif token == "addClient":

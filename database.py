@@ -77,11 +77,16 @@ class Database():
             print(client)
 
     def addLog(self, RFID, clientId):
+        if clientId >= self.nextClientId:
+            print(f"No terminal with id {clientId}!")
+            return
         for worker in self.workers:
             for card in worker.cards:
                 if card == RFID:
                     self.logs.append(self.Log(clientId, worker.id, RFID))
+                    print(f"Logged {worker.name} at terminal {clientId} with RFID {RFID}.")
                     return
+        print(f"Logged unknown at terminal {clientId} with RFID {RFID}.")
         self.logs.append(self.Log(clientId, -1, RFID))
 
     def getWorkerLogs(self, workerId):
