@@ -13,7 +13,6 @@ rfids = {
     "9" : [18, 56, 172, 213, 119] #514685941778
 }
 
-#will be done using client
 def read():
     print("-----READING RFID-----")
     UID = rfids[input("Input RFID number (1-9): ")]
@@ -57,7 +56,6 @@ def main():
             RFID = read()
             db.addRFID(workerId, RFID)
         elif token == "rmRFID":
-            workerId = int(input("Input worker's id (integer): "))
             RFID = read()
             db.rmRFID(workerId)
         elif token == "read":
@@ -70,8 +68,6 @@ def main():
             db.printClients()
         elif token == "generateReport":
             print(db.generateReport(int(input("Input worker's id (integer): "))))
-        elif token == "test":
-            print(db.test())
         else:
             print(f"Unrecognised command '{token}'.")
             

@@ -6,7 +6,6 @@ from datetime import datetime
 
 class Database():
     def __init__(self):
-        self.logs = []
         self.clients = loadClients()
         self.workers = loadWorkers()
         self.nextWorkerId = len(self.workers)
@@ -91,26 +90,21 @@ class Database():
             return
         for worker in self.workers:
             if worker.card == RFID and worker.removed == False:
-                self.logs.append(Log(clientId, worker.id, RFID))
                 log = f"{clientId},{worker.id},{RFID},{time.time()}\n"
                 saveLogs(log)
                 print(f"Logged {worker.name} at terminal {clientId} with RFID {RFID}.")
                 return
         print(f"Logged unknown at terminal {clientId} with RFID {RFID}.")
-        self.logs.append(Log(clientId, -1, RFID))
         log = f"{clientId},{-1},{RFID},{time.time()}\n"
         saveLogs(log)
 
-    #client, worker, name, starttime, endtime, time
     def generateReport(self, workerId):
         worker = self.findWorker(workerId)
         if worker:
             print(f"Generating report for {worker.name} with id {workerId}.")
-            #log = f"{clientId},{worker.id},{RFID},{time.time()}\n"
             logs = loadWorkerLogs(workerId)
             output = "RFID,startClientId,endClientId,workerId,workerName,startTime,endTime,workTime\n"
             for i in range(0, len(logs)-1, 2):
-                print(f"PARSING: {logs[i]}")
                 log = logs[i]
                 nextLog = logs[i+1]
                 startTime = datetime.fromtimestamp(int(log[3].split(".")[0]))
@@ -128,27 +122,3 @@ class Database():
             print(f"Report generated.\nOutput in file '{filename}'")
         else:
             print(f"No worker with id {workerId}!")
-
-    def getWorkerLogs(self, workerId):
-        output = []
-        for log in self.logs:
-            if log.workerId == workerId:
-                output.append(log)
-        return output
-
-    def getWorkerCSV(self, workerId):
-        logs = self.getWorkerLogs(workerId)
-        output = "clientId,workerId,RFID,timestamp\n"
-        for log in logs:
-            output+=f"{log.clientId},{log.workerId},{log.RFID},{log.timestamp}\n"
-        return output
-    
-    def getAllWorkerCSV(self):
-        output = "clientId,workerId,RFID,timestamp\n"
-        for log in self.logs:
-            output+=f"{log.clientId},{log.workerId},{log.RFID},{log.timestamp}\n"
-        return output
-
-    def test(self):
-        for w in self.workers:
-            print(f"Worker {w.name} is removed {w.removed}")

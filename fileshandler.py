@@ -2,13 +2,6 @@ from worker import Worker
 from client import Client
 import time
 
-class Log():
-    def __init__(self, clientId, workerId, RFID):
-        self.timestamp = time.time()
-        self.clientId = clientId
-        self.workerId = workerId
-        self.RFID = RFID
-
 def saveWorkers(allWorkers):
     f = open("workers.txt", "w")
     for worker in allWorkers:
