@@ -16,10 +16,21 @@ rfids = {
 
 broker = "localhost"
 server = mqtt.Client()
+db = Database()
 
 def receive_message(client, data, message):
-    message_decoded = (str(message.payload.decode("utf-8")))
-    print(f"Received message: {message_decoded}")
+    message_decoded = (str(message.payload.decode("utf-8"))).split(":")
+    token = message_decoded[0]
+    print(token)
+    value = int(message_decoded[1])
+    if token == "rfid":
+        db.addLog(value, int(message_decoded[2]))
+    elif token == "connected":
+        print(f"Terminal with id {value} {message_decoded[0]}.")
+        db.addClient(value)
+    elif token == "disconnected":
+        print(f"Terminal with id {value} {message_decoded[0]}.")
+        db.rmClient(value)
 
 def connect():
     server.connect(broker)
@@ -33,7 +44,6 @@ def disconnect():
 
 def main():
     connect()
-    db = Database()
     isRunning = True
     while(isRunning):
         token = input(">")
@@ -43,8 +53,6 @@ def main():
             print("""Command list:
             > help - list of all commands
             > exit - end server
-            > addClient - add a new terminal to the system
-            > rmClient - remove an existing terminal from the system
             > addWorker - add a new worker to the system
             > rmWorker - remove an existing worker from the system
             > addRFID - add an RFID card to an existing worker
@@ -52,11 +60,6 @@ def main():
             > lsWorkers - list all workers in the system
             > lsClients - list all terminals in the system
             > generateReport - generate a .csv file with worktime of selected worker.""")
-        elif token == "addClient":
-            db.addClient()
-        elif token == "rmClient":
-            clientId = int(input("Input client id (integer): "))
-            db.removeClient(clientId)
         elif token == "addWorker":
             db.addWorker(input("Input worker's name: "))
         elif token == "rmWorker":
@@ -68,10 +71,6 @@ def main():
         elif token == "rmRFID":
             workerId = int(input("Input worker's id (integer): "))
             db.rmRFID(workerId)
-        elif token == "read":
-            clientId = int(input("Input client id (integer): "))
-            RFID = read()
-            db.addLog(RFID, clientId)
         elif token == "lsWorkers":
             db.printWorkers()
         elif token == "lsClients":

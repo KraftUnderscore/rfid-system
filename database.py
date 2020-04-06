@@ -1,4 +1,3 @@
-from client import Client
 from worker import Worker
 from fileshandler import *
 import time
@@ -6,25 +5,15 @@ from datetime import datetime
 
 class Database():
     def __init__(self):
-        self.clients = loadClients()
+        self.clients = []
         self.workers = loadWorkers()
         self.nextWorkerId = len(self.workers)
-        self.nextClientId = len(self.clients)
 
-    def addClient(self):
-        self.clients.append(Client(self.nextClientId))
-        print(f"Added client with id {self.nextClientId}.")
-        self.nextClientId+=1
-        saveClients(self.clients)
+    def addClient(self, clientId):
+        self.clients.append(clientId)
 
-    def removeClient(self, clientId):
-        for client in self.clients:
-            if client.id == clientId and client.removed == False:
-                client.setRemoved(True)
-                print(f"Removed client with id {clientId}.")
-                saveClients(self.clients)
-                return
-        print(f"No client with id {clientId}!")
+    def rmClient(self, clientId):
+        self.clients.remove(clientId)
 
     def findWorker(self, workerId):
         for worker in self.workers:
@@ -79,15 +68,11 @@ class Database():
                 print(worker)
 
     def printClients(self):
-        print("List of clients:")
+        print("List of connected clients:")
         for client in self.clients:
-            if client.removed == False:
-                print(client)
-
+            print(f"Terminal {client}.")
+            
     def addLog(self, RFID, clientId):
-        if clientId >= self.nextClientId:
-            print(f"No terminal with id {clientId}!")
-            return
         for worker in self.workers:
             if worker.card == RFID and worker.removed == False:
                 log = f"{clientId},{worker.id},{RFID},{time.time()}\n"

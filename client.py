@@ -1,16 +1,5 @@
 import paho.mqtt.client as mqtt
 
-class Client:
-    def __init__(self, id):
-        self.id = -1
-        self.removed = False
-    
-    def setRemoved(self, removed):
-        self.removed = removed
-
-    def __str__(self):
-        return f"Terminal with id {self.id}."
-
 rfids = {
     "1" : [176, 111, 225, 37, 27], #116599648176
     "2" : [217, 125, 80, 211, 39], #171048992217
@@ -33,22 +22,22 @@ def read():
 
 client = mqtt.Client()
 broker = "localhost"
-clientId = -1
 
-def connect():
+def connect(clientId):
     client.connect(broker)
-    client.publish("client", "connected:ID",)
+    client.publish("client", f"connected:{clientId}",)
 
-def disconnect():
-    client.publish("client", "disconnected:ID",)
+def disconnect(clientId):
+    client.publish("client", f"disconnected:{clientId}",)
     client.disconnect()
 
 def main():
+    clientId =-1
     clientId = int(input("Input terminal ID(positive integer): "))
     if(clientId<0):
         print("Invalid id. Terminating...")
         return
-    connect()
+    connect(clientId)
     isRunning = True
     while(isRunning):
         token = input(">")
@@ -61,10 +50,10 @@ def main():
             > read - simulate an RFID card input""")
         elif token == "read":
             RFID = read()
-            client.publish("client", f"rfid:{RFID}",)
+            client.publish("client", f"rfid:{RFID}:{clientId}",)
         else:
             print(f"Unrecognised command '{token}'.")
-    disconnect()
+    disconnect(clientId)
 
 if __name__ == "__main__":
     main()

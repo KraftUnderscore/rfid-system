@@ -1,5 +1,4 @@
 from worker import Worker
-from client import Client
 import time
 
 def saveWorkers(allWorkers):
@@ -22,26 +21,6 @@ def loadWorkers():
         workers.append(toAdd)
     f.close()
     return workers
-
-def saveClients(allClients):
-    f = open("clients.txt", "w")
-    for client in allClients:
-        f.write(f"{client.id},{client.removed}\n")
-    f.close()
-
-def loadClients():
-    f = open("clients.txt", "r")
-    clients = []
-    for client in f:
-        infoStr = client.split(",")
-        toAdd = Client(int(infoStr[0]))
-        if infoStr[1] == "False\n":
-            toAdd.setRemoved(False)
-        else:
-            toAdd.setRemoved(True)
-        clients.append(toAdd)
-    f.close()
-    return clients
 
 def saveLogs(log):
     f = open("logs.txt", "a")
