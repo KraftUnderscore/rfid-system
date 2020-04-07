@@ -1,0 +1,4 @@
+0,Sebastian,False,-1
+1,Michal,False,171048992217
+2,Agnieszka,False,81344408412
+3,Kasia,True,-1

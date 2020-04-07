@@ -84,7 +84,12 @@ class Database():
         saveLogs(log)
 
     def generateReport(self, workerId):
-        worker = self.findWorker(workerId)
+        worker = None
+        for w in self.workers:
+            if w.id == workerId:
+                worker = w
+                break
+        
         if worker:
             print(f"Generating report for {worker.name} with id {workerId}.")
             logs = loadWorkerLogs(workerId)

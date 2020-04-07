@@ -21,7 +21,6 @@ db = Database()
 def receive_message(client, data, message):
     message_decoded = (str(message.payload.decode("utf-8"))).split(":")
     token = message_decoded[0]
-    print(token)
     value = int(message_decoded[1])
     if token == "rfid":
         db.addLog(value, int(message_decoded[2]))
