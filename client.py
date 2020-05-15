@@ -14,17 +14,24 @@ rfids = {
 
 def read():
     print("-----READING RFID-----")
-    UID = rfids[input("Input RFID number (1-9): ")]
+    readId = input("Input RFID number [1-9]: ")
+    if readId < '1' or readId > '9':
+        print("Number out of range of [1-9]!")
+        return -1
+    UID = rfids[readId]
     num = 0
     for i in range(0, len(UID)):
         num += UID[i] << (i*8)
     return num
 
 client = mqtt.Client()
-broker = "localhost"
+broker = "DESKTOP-LD3U7DI"
+port = 8883
 
 def connect(clientId):
-    client.connect(broker)
+    client.tls_set("ca.crt")
+    client.username_pw_set(username='client', password=input("PASSWORD:"))#password
+    client.connect(broker, port)
     client.publish("client", f"connected:{clientId}",)
 
 def disconnect(clientId):
@@ -46,11 +53,12 @@ def main():
         elif token == "help":
             print("""Command list:
             > help - list of all commands
-            > exit - end server
+            > exit - end client
             > read - simulate an RFID card input""")
         elif token == "read":
             RFID = read()
-            client.publish("client", f"rfid:{RFID}:{clientId}",)
+            if RFID != -1:
+                client.publish("worker", f"rfid:{RFID}:{clientId}",)
         else:
             print(f"Unrecognised command '{token}'.")
     disconnect(clientId)

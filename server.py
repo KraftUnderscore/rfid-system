@@ -14,7 +14,8 @@ rfids = {
     "9" : 514685941778
 }
 
-broker = "localhost"
+broker = "DESKTOP-LD3U7DI"
+port = 8883
 server = mqtt.Client()
 db = Database()
 
@@ -32,10 +33,12 @@ def receive_message(client, data, message):
         db.rmClient(value)
 
 def connect():
-    server.connect(broker)
+    server.tls_set("ca.crt")
+    server.username_pw_set(username='server', password=input("PASSWORD:"))#password123
+    server.connect(broker, port)
     server.on_message = receive_message
+    server.subscribe("worker")
     server.loop_start()
-    server.subscribe("client")
 
 def disconnect():
     server.loop_stop()
